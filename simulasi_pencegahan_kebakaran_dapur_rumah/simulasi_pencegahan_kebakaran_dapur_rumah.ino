@@ -1,31 +1,36 @@
 #include<LiquidCrystal.h>   //memasukan library LCD ke program        
 #include<Servo.h>           //memasukan library servo ke program
-
+static const uint8_t D0   = 16;
+static const uint8_t D1   = 5;
+static const uint8_t D2   = 4;
+static const uint8_t D3   = 0;
+static const uint8_t D4   = 2;
+static const uint8_t D5   = 14;
+static const uint8_t D6   = 12;
+static const uint8_t D7   = 13;
+static const uint8_t D8   = 15;
+static const uint8_t D9   = 3;
+static const uint8_t D10  = 1;
 float temp = 0;
 float gas = 0;
 
-/*
- * untuk analog dual pinpoint
- * const int analog = A0;
- * int sensorgas = 0;
- * int sensortmp = 0;
- */
+const int analog = A0;
+int gassen = 0;
+int temptmp = 0;
 
-const int temptmp = A0;
-const int gassen = A1;
-int led_caution = 11;                 //inisialisasi led_caution di PIN 11 pada ARDUINO UNO
-int buzzer = 4;
-int led_fine = 3;                     //inisialisasi led_fine di PIN 3 pada ARDUINO UNO
-int pushButton = 12;
-int pinServo = 2;
-int flamesen = x;                     //ganti sesuai dengan pinout yang digunakan (digital)
+int led_caution = D1;                 //inisialisasi led_caution di PIN 11 pada ARDUINO UNO
+int buzzer = D3;
+int led_fine = D2;                     //inisialisasi led_fine di PIN 3 pada ARDUINO UNO
+int pushButton = D5;
+int pinServo = D4;
+//int flamesen = x;                     //ganti sesuai dengan pinout yang digunakan (digital)
 
 float tmp;
 int flameon;
 int buttonState;
 
 Servo cekservo;                       //inisialisasi variable myservo untuk menggerakan posisi servo
-LiquidCrystal lcd(5, 6, 10, 9, 8, 7);
+LiquidCrystal lcd(D6, D7, D8, D8, D8, D8);
 
 //apabila ingin menggunakan nodemcu esp8266 rubah sesuai dengan pin yang dipasang
 
@@ -34,7 +39,7 @@ void setup()
   Serial.begin(9600);               //mendeklarasi kecepatan data rate untuk Serial Monitor
   cekservo.attach(pinServo);        //mendeklarasi pin D2 di arduino terhubung dengan kabel Signal di motor servo
   lcd.begin(16,2);
-  pinMode(flamesen, INPUT);
+  //pinMode(flamesen, INPUT);
   pinMode(temptmp, INPUT);
   pinMode(pushButton, INPUT);
   pinMode(led_caution, OUTPUT);     //mendeklarasi led_caution sbg OUTPUT
@@ -46,18 +51,15 @@ void setup()
 void loop()
 {
   buttonState = digitalRead(pushButton);
-  flameon = digitalRead(flamesen);
-  /*
-   * nanti ganti juga variabel gas dan tmp karena kita hanya bikin satu pin analog
-   * sensorgas = analogRead(analog);
-   * sensortmp = analogRead(analog);
-   */
-  gas = analogRead(gassen);
-  tmp = analogRead(temptmp);
+  //flameon = digitalRead(flamesen);
+  
+  gas = analogRead(analog);
+  tmp = analogRead(analog);
+
   temp = tmp*5; 
   temp = temp/1024;
   temp = (temp-0.5)*100;
-  if (temp >= 110.5 && gas >= 100 && flameon == 1) {
+  if (temp >= 30 && gas >= 100 ) {
     delay(200);
     lcd.clear();
     digitalWrite(led_caution, HIGH);
