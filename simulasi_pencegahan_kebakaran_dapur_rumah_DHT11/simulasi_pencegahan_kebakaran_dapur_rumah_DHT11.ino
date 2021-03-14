@@ -4,19 +4,18 @@
 #include "DHT.h"
 #define DHTPIN 13
 #define DHTTYPE DHT11
-#define D0 16;
-#define D1 5;
-#define D2 4;
-#define D3 0;
-#define D4 2;
-#define D5 14;
-#define D6 12;
-#define D7 13;
-#define D8 15;
-#define D9 3;
-#define D10 1;
-#define Analog A0;
-DHT dht(DHTPIN, DHTTYPE)
+
+static const uint8_t D0   = 16;
+static const uint8_t D1   = 5;
+static const uint8_t D2   = 4;
+static const uint8_t D3   = 0;
+static const uint8_t D4   = 2;
+static const uint8_t D5   = 14;
+static const uint8_t D6   = 12;
+static const uint8_t D7   = 13;
+static const uint8_t D8   = 15;
+static const uint8_t D9   = 3;
+static const uint8_t D10  = 1;
 
 int led_caution = D1;                 //inisialisasi led_caution di PIN 11 pada ARDUINO UNO
 int buzzer = D3;
@@ -27,10 +26,12 @@ int flamesen = D9;                     //ganti sesuai dengan pinout yang digunak
 
 float t;
 float h;
+float hic;
 int flameon;
 int buttonState;
 
-Servo cekservo;                       //inisialisasi variable myservo untuk menggerakan posisi servo
+DHT dht(DHTPIN, DHTTYPE);
+Servo cekservo;      //inisialisasi variable myservo untuk menggerakan posisi servo
 LiquidCrystal lcd(D6, D7, D8, D8, D8, D8);
 
 void setup()
@@ -47,8 +48,10 @@ void loop()
 {
   buttonState = digitalRead(pushButton);
   //flameon = digitalRead(flamesen);
-  t = dht.temperature
-  h = dht.humidity
+  t = dht.readTemperature();
+  h = dht.readHumidity();
+  hic = dht.computeHeatIndex(t, h, false);
+
   if (t >= 30 && h <= 30 ) {
     lcd.clear();
     digitalWrite(led_caution, HIGH);
@@ -74,8 +77,18 @@ void loop()
     lcd.print(t);
     lcd.print((char)223);
     lcd.print("C");
+    Serial.print("Humidity: ");
+    Serial.print(h);
+    Serial.print(" %\t");
+    Serial.print("Temperature: ");
+    Serial.print(t);
+    Serial.print((char)223);
+    Serial.print("C");
+    Serial.print("Heat index: ");
+    Serial.print(hic);
+    Serial.print((char)223);
+    Serial.print("C");
   }
-  
   if (buttonState==1){
     lcd.clear();
     cekservo.write(0);
