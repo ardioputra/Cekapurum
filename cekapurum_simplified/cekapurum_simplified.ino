@@ -26,8 +26,21 @@ void setup() {
 
 void loop() {
   f = analogRead(pinFlame);
+  delay(2000);
   float t = dht.readTemperature();
-  delay(200);
+  float h = dht.readHumidity();
+  if(isnan(t) || isnan(h)){
+    Serial.println("Data Nan!");
+  }
+    Serial.print(f);
+    Serial.print("Suhu : ");
+    Serial.print(t);
+    Serial.print("°");
+    Serial.print("C / ");
+    Serial.print("Kelembaban: ");
+    Serial.print(h);
+    Serial.print(" %\t");
+  
   if(f<100 || t>30){
     digitalWrite(led_hijau, LOW);
     digitalWrite(led_merah, HIGH);
