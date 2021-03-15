@@ -1,9 +1,9 @@
 #include<Adafruit_Sensor.h>
 #include<Servo.h>
 #include "DHT.h"
-#define DHTTYPE DHT11
+#define   DHTTYPE DHT11
 
-DHT dht(16, DHTTYPE);
+DHT dht(13, DHTTYPE);
 Servo cekservo;
 
 int led_merah = 5;
@@ -11,7 +11,6 @@ int led_hijau = 4;
 int buzzer = 0;
 int pinServo = 2;
 int pinFlame = A0;
-
 int f = 0;
 
 void setup() {
@@ -26,14 +25,12 @@ void setup() {
 
 void loop() {
   f = analogRead(pinFlame);
-  delay(500);
   float t = dht.readTemperature();
-  delay(500);
   float h = dht.readHumidity();
-  if(isnan(t) || isnan(h)){
+  if(isnan(t)){
     Serial.println("Data Nan!");
   }
-    Serial.print(f);
+    Serial.println(f);
     Serial.print("Suhu : ");
     Serial.print(t);
     Serial.print("°");
@@ -41,8 +38,9 @@ void loop() {
     Serial.print("Kelembaban: ");
     Serial.print(h);
     Serial.print(" %\t");
+    delay(250);
   
-  if(f<100 || t>30){
+  if(f<100 && t>40){
     digitalWrite(led_hijau, LOW);
     digitalWrite(led_merah, HIGH);
     digitalWrite(buzzer, HIGH);
