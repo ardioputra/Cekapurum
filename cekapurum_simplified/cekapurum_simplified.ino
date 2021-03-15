@@ -1,7 +1,7 @@
 #include<Servo.h>
 #include "DHT.h"
 #define DHTTYPE DHT11
-#define dht_dpin 0
+#define dht_dpin 16
 
 static const uint8_t D0   = 16;
 static const uint8_t D1   = 5;
@@ -45,9 +45,12 @@ void setup() {
 void loop() {
   f = analogRead(pinFlame);
   float h = dht.readHumidity();
+  delay(200);
   float t = dht.readTemperature();
-
-  if(f<100 && t>=36.5){
+  delay(200);
+  Serial.print(t);
+  
+  /*if(f<100 && t>=36.5){
     digitalWrite(led_hijau, LOW);
     digitalWrite(led_merah, HIGH);
     digitalWrite(buzzer, HIGH);
@@ -65,7 +68,7 @@ void loop() {
     Serial.print(t); 
     Serial.println("C  ");
     delay(1000); 
-  }
+  }*/
   
   delay(800); 
 }
