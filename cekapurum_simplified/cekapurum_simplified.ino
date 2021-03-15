@@ -26,8 +26,9 @@ void setup() {
 
 void loop() {
   f = analogRead(pinFlame);
-  delay(2000);
+  delay(500);
   float t = dht.readTemperature();
+  delay(500);
   float h = dht.readHumidity();
   if(isnan(t) || isnan(h)){
     Serial.println("Data Nan!");
