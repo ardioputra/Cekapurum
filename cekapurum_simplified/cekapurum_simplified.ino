@@ -53,6 +53,7 @@ void loop() {
     digitalWrite(buzzer, HIGH);
     cekservo.write(90);
     Serial.print("Kebakaran!");
+    delay(200); 
   } else {
     digitalWrite(led_hijau, HIGH);
     digitalWrite(led_merah, LOW);
@@ -63,6 +64,7 @@ void loop() {
     Serial.print("temperature = ");
     Serial.print(t); 
     Serial.println("C  ");
+    delay(1000); 
   }
   
   delay(800); 
