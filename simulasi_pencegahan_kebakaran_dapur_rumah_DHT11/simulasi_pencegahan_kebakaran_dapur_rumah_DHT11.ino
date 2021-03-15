@@ -2,7 +2,7 @@
 #include<Servo.h>           //memasukan library servo ke program
 #include<Adafruit_Sensor.h> 
 #include "DHT.h"
-#define DHTPIN 13
+#define DHTPIN 10
 #define DHTTYPE DHT11
 
 static const uint8_t D0   = 16;
@@ -20,9 +20,9 @@ static const uint8_t D10  = 1;
 int led_caution = D1;                 //inisialisasi led_caution di PIN 11 pada ARDUINO UNO
 int buzzer = D3;
 int led_fine = D2;                     //inisialisasi led_fine di PIN 3 pada ARDUINO UNO
-int pushButton = D5;
+//int pushButton = D5;
 int pinServo = D4;
-int flamesen = D9;                     //ganti sesuai dengan pinout yang digunakan (digital)
+int flamesen = D0;                     //ganti sesuai dengan pinout yang digunakan (digital)
 
 float t;
 float h;
@@ -32,7 +32,7 @@ int buttonState;
 
 DHT dht(DHTPIN, DHTTYPE);
 Servo cekservo;      //inisialisasi variable myservo untuk menggerakan posisi servo
-LiquidCrystal lcd(D6, D7, D8, D8, D8, D8);
+LiquidCrystal lcd(D9, D10, D5, D6, D7, D8);
 
 void setup()
 {
@@ -46,7 +46,7 @@ void setup()
 
 void loop()
 {
-  buttonState = digitalRead(pushButton);
+  //buttonState = digitalRead(pushButton);
   //flameon = digitalRead(flamesen);
   t = dht.readTemperature();
   h = dht.readHumidity();
