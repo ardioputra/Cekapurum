@@ -1,7 +1,7 @@
-#include<LiquidCrystal_I2C.h>
-#include<Adafruit_Sensor.h>
-#include<Wire.h>
-#include<Servo.h>
+#include <LiquidCrystal_I2C.h>
+#include <Adafruit_Sensor.h>
+#include <Wire.h>
+#include <Servo.h>
 #include "DHT.h"
 #define DHTTYPE DHT11
 
@@ -16,10 +16,10 @@ int buzzer = 0;
 int pinServo = 2;
 int pinFlame = A0;
 
-int buttonState;
 int f;
-float t;
+int buttonState;
 float h;
+float t;
 
 void setup() {
   Serial.begin(9600);
@@ -43,9 +43,9 @@ void loop() {
   if(isnan(t)){
     Serial.println("Data Nan!");
   } else {
-    Serial.print("Tegangan Fire Sensor : ");
-    Serial.print(f*(5.0/1023.0));
-    Serial.print(" V / ");
+    Serial.print("Units Fire Sensor : ");
+    Serial.print(f);
+    Serial.print(" Units / ");
     Serial.print("Suhu : ");
     Serial.print(t);
     Serial.print("°");
@@ -65,7 +65,7 @@ void loop() {
     lcd.setCursor(0,0);
     lcd.print("KEBAKARAN !!");
     lcd.setCursor(0,1);
-    lcd.print("SELAMATKAN DIRI");
+    lcd.print("SELAMATKAN DIRI !!");
     delay(200); 
   } else {
     lcd.clear();
@@ -96,6 +96,4 @@ void loop() {
     lcd.print("Direset!!");
     delay(20000);
   } 
-
-  
 }
