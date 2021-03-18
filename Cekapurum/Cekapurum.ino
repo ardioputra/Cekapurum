@@ -18,7 +18,7 @@ int pinFlame = A0;
 int f = 0;
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   dht.begin();
   Wire.begin(4,5);
   lcd.begin();
