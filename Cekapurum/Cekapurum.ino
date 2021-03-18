@@ -1,6 +1,6 @@
-#include <LiquidCrystal_I2C.h>
+#include<LiquidCrystal_I2C.h>
 #include<Adafruit_Sensor.h>
-#include <Wire.h>
+#include<Wire.h>
 #include<Servo.h>
 #include "DHT.h"
 #define DHTTYPE DHT11
@@ -15,7 +15,11 @@ int led_hijau = 12;
 int buzzer = 0;
 int pinServo = 2;
 int pinFlame = A0;
-int f = 0;
+
+int buttonState;
+int f;
+float t;
+float h;
 
 void setup() {
   Serial.begin(9600);
@@ -31,10 +35,10 @@ void setup() {
 }
 
 void loop() {
-  int buttonState = digitalRead(button);
+  buttonState = digitalRead(button);
   f = analogRead(pinFlame);
-  float t = dht.readTemperature();
-  float h = dht.readHumidity();
+  t = dht.readTemperature();
+  h = dht.readHumidity();
   
   if(isnan(t)){
     Serial.println("Data Nan!");
@@ -61,7 +65,7 @@ void loop() {
     lcd.setCursor(0,0);
     lcd.print("KEBAKARAN !!");
     lcd.setCursor(0,1);
-    lcd.print("SELAMATKAN DIRI !!");
+    lcd.print("SELAMATKAN DIRI");
     delay(200); 
   } else {
     lcd.clear();
