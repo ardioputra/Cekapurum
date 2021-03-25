@@ -6,11 +6,11 @@
 #include "DHT.h"
 #define DHTTYPE DHT11
 
-#define ACCESSKEY "d2c4c7aa5b0cb1dc:e39afec6ee104446"
-#define WIFISSID "DELLADIO"
-#define PASSWORD "0271190258"
+#define ACCESSKEY "6e6b74ca7ead77f7:09437f0a4cc56904"
+#define WIFISSID "dikry"
+#define PASSWORD "123dikri"
 
-#define projectName "CekapurumSub"
+#define projectName "Cekapurumiot"
 #define deviceName "CekapurumSensor"
 
 AntaresESP8266MQTT antares(ACCESSKEY);
@@ -55,7 +55,7 @@ void loop() {
   t = dht.readTemperature();
   h = dht.readHumidity();
   
-  if(isnan(t)){
+  /*if(isnan(t)){
     Serial.println("Data Nan!");
   } else {
     Serial.print("Units Fire Sensor : ");
@@ -69,7 +69,7 @@ void loop() {
     Serial.print(h);
     Serial.print(" %\n");
     delay(250);
-  }
+  }*/
   
   if(f<100 && t>35 && h<50){
     lcd.clear();
@@ -116,5 +116,5 @@ void loop() {
   antares.add("humidity", h);
   antares.add("fire_units", f);
   antares.publish(projectName, deviceName);
-  delay(5000);
+  delay(1000);
 }
