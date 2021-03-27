@@ -25,6 +25,7 @@ int led_hijau = 12;                                   //variabel "led_hijau" den
 int buzzer = 0;                                       //variabel "buzzer" dengan tipe data integer, pin 0
 int pinServo = 2;                                     //variabel "pinServo" dengan tipe data integer, pin 2
 int pinFlame = A0;                                    //variabel "pinFlame" dengan tipe data integer, pin A0
+String status_kebakaran;
 
 int f;                                                //variabel "f" dengan tipe data integer 
 int buttonState;                                      //variabel "buttonState" dengan tipe data integer 
@@ -81,6 +82,7 @@ void loop() {
     lcd.print("KEBAKARAN !!");                        //menampilkan tulisan "KEBAKARAN !!" pada LCD
     lcd.setCursor(0,1);                               //mengatur tulisan pada kolom 0 dan baris 1
     lcd.print("SELAMATKAN DIRI !!");                  //menampilkan tulisan "SELAMATKAN DIRI !!" pada LCD
+    status_kebakaran = "Kebakaran";
     delay(200);                                       //mengatur waktu jeda  
   } else {
     lcd.clear();                                      //menghapus tulisan pada LCD
@@ -96,6 +98,7 @@ void loop() {
     lcd.print("HUMI : ");                             //menampilkan tulisan "HUMI: " pada LCD
     lcd.print(h);                                     //mengambil nilai dari variabel "h" dan menampilkannya pada LCD
     lcd.print(" %");                                  //menampilkan tulisan " %" pada LCD
+    status_kebakaran = "Aman";
     delay(200);                                       //mengatur waktu jeda
   }
 
@@ -115,6 +118,7 @@ void loop() {
   antares.add("temperature", t);                      //menambahkan variabel "temperature" ke buffer
   antares.add("humidity", h);                         //menambahkan variabel "humidity" ke buffer
   antares.add("fire_units", f);                       //menambahkan variabel "fire_units" ke buffer
+  antares.add("status", status_kebakaran);
   antares.publish(projectName, deviceName);           //publish data ke database Antares dan juga broker MQTT Antares
   delay(1000);                                        //mengatur waktu jeda
 }
