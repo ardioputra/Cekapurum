@@ -1,59 +1,59 @@
-#include <AntaresESP8266MQTT.h>
-#include <LiquidCrystal_I2C.h>
+#include <AntaresESP8266MQTT.h>                       //inisiasi library Antares MQTT 
+#include <LiquidCrystal_I2C.h>                        //inisiasi library LCD
 #include <Adafruit_Sensor.h>
-#include <Wire.h>
-#include <Servo.h>
-#include "DHT.h"
-#define DHTTYPE DHT11
+#include <Wire.h>                                     //inisiasi library komunikasi I2C
+#include <Servo.h>                                    //inisiasi library servo
+#include "DHT.h"                                      //inisiasi library sensor suhu&kelembaban
+#define DHTTYPE DHT11                                 //sensor DHT yang digunakan adalah tipe DHT11
 
-#define ACCESSKEY "6e6b74ca7ead77f7:09437f0a4cc56904"
-#define WIFISSID "dikry"
-#define PASSWORD "123dikri"
+#define ACCESSKEY "6e6b74ca7ead77f7:09437f0a4cc56904" //mendefinisikan ACCESSKEY, ganti dengan Access Key yang terdapat di akun Antares
+#define WIFISSID "dikry"                              //mendefinisikan WIFISSID, ganti dengan SSID Wifi anda
+#define PASSWORD "123dikri"                           //mendefinisikan PASSWORD, ganti dengan password Wifi anda
 
-#define projectName "Cekapurumiot"
-#define deviceName "CekapurumSensor"
+#define projectName "Cekapurumiot"                    //mendefinisikan projectName, tuliskan projectname sesuai yang sudah di-inputkan pada Antares
+#define deviceName "CekapurumSensor"                  //mendefinisikan deviceName, tuliskan devicename sesuai yang sudah di-inputkan pada Antares
 
-AntaresESP8266MQTT antares(ACCESSKEY);
+AntaresESP8266MQTT antares(ACCESSKEY);                //membuat objek Antares
 
-DHT dht(13, DHTTYPE);
-Servo cekservo;
-LiquidCrystal_I2C lcd(0x27, 16, 2);
+DHT dht(13, DHTTYPE);                                 //membuat objek dht, pin yang digunakan untuk pembacaan sensor adalah pin 13
+Servo cekservo;                                       //membuat objek servo untuk mengontrol servo
+LiquidCrystal_I2C lcd(0x27, 16, 2);                   //I2C address 0x27, ukuran LCD 16x2 
 
-int button = 16; 
-int led_merah = 14;
-int led_hijau = 12;
-int buzzer = 0;
-int pinServo = 2;
-int pinFlame = A0;
+int button = 16;                                      //variabel "button" dengan tipe data integer, pin 16
+int led_merah = 14;                                   //variabel "led_merah" dengan tipe data integer, pin 14                          
+int led_hijau = 12;                                   //variabel "led_hijau" dengan tipe data integer, pin 12
+int buzzer = 0;                                       //variabel "buzzer" dengan tipe data integer, pin 0
+int pinServo = 2;                                     //variabel "pinServo" dengan tipe data integer, pin 2
+int pinFlame = A0;                                    //variabel "pinFlame" dengan tipe data integer, pin A0
 
-int f;
-int buttonState;
-float h;
-float t;
+int f;                                                //variabel "f" dengan tipe data integer 
+int buttonState;                                      //variabel "buttonState" dengan tipe data integer 
+float h;                                              //variabel "h" / kelembaban dengan tipe data float
+float t;                                              //variabel "t" / suhu dengan tipe data float
 
 void setup() {
-  Serial.begin(115200);
-  antares.setDebug(true);
-  antares.wifiConnection(WIFISSID, PASSWORD);
-  antares.setMqttServer();
-  dht.begin();
-  Wire.begin(4,5);
-  lcd.begin();
-  lcd.backlight();
-  cekservo.attach(pinServo);
-  cekservo.write(0);
-  pinMode(led_merah, OUTPUT);
-  pinMode(led_hijau, OUTPUT);
-  pinMode(buzzer, OUTPUT);
+  Serial.begin(115200);                               //membuka komunikasi serial dengan baudrate(kecepatan transfer data dalam bps) 115200
+  antares.setDebug(true);                             //menyalakan debug. Set menjadi "false" jika tidak ingin pesan tampil di serial monitor
+  antares.wifiConnection(WIFISSID, PASSWORD);         //mencoba untuk menyambungkan ke Wifi
+  antares.setMqttServer();                            //inisiasi server MQTT Antares
+  dht.begin();                                        //inisiasi objek dht
+  Wire.begin(4,5);                                    //memulai fungsi dengan menginisiasi port I2C
+  lcd.begin();                                        //menyatakan bagian LCD yang akan digunakan, tulisan akan diletakkan pada baris dan kolom default 
+  lcd.backlight();                                    //menyalakan backlight
+  cekservo.attach(pinServo);                          //objek servo mengatur pin yang digunakan
+  cekservo.write(0);                                  //mengatur posisi servo ke 0 derajat
+  pinMode(led_merah, OUTPUT);                         //mengkonfigurasi pin led_merah menjadi output
+  pinMode(led_hijau, OUTPUT);                         //mengkonfigurasi pin led_hijau menjadi output
+  pinMode(buzzer, OUTPUT);                            //mengkonfigurasi pin buzzer menjadi output
 }
 
 void loop() {
-  antares.checkMqttConnection();
+  antares.checkMqttConnection();                      //cek koneksi ke broker MQTT Antares. Jika disconnect, akan dicoba untuk menyambungkan lagi
 
-  buttonState = digitalRead(button);
-  f = analogRead(pinFlame);
-  t = dht.readTemperature();
-  h = dht.readHumidity();
+  buttonState = digitalRead(button);                  //membaca nilai digital pada pinFlame dan menyimpannya kedalam variabel "buttonState"
+  f = analogRead(pinFlame);                           //membaca nilai analog pada pinFlame dan menyimpannya kedalam variable "f"
+  t = dht.readTemperature();                          //variabel "t" digunakan untuk membaca suhu
+  h = dht.readHumidity();                             //variabel "h" digunakan untuk membaca kelembaban
   
   /*if(isnan(t)){
     Serial.println("Data Nan!");
@@ -72,49 +72,49 @@ void loop() {
   }*/
   
   if(f<100 && t>35 && h<50){
-    lcd.clear();
-    digitalWrite(led_hijau, LOW);
-    digitalWrite(led_merah, HIGH);
-    digitalWrite(buzzer, HIGH);
-    cekservo.write(90);
-    lcd.setCursor(0,0);
-    lcd.print("KEBAKARAN !!");
-    lcd.setCursor(0,1);
-    lcd.print("SELAMATKAN DIRI !!");
-    delay(200); 
+    lcd.clear();                                      //menghapus tulisan pada LCD
+    digitalWrite(led_hijau, LOW);                     //memberi nilai LOW pada pin led_hijau
+    digitalWrite(led_merah, HIGH);                    //memberi nilai HIGH pada pin led_merah
+    digitalWrite(buzzer, HIGH);                       //memberi nilai HIGH pada pin buzzer
+    cekservo.write(90);                               //mengatur posisi servo ke 90 derajat
+    lcd.setCursor(0,0);                               //mengatur tulisan pada kolom 0 dan baris 0
+    lcd.print("KEBAKARAN !!");                        //menampilkan tulisan "KEBAKARAN !!" pada LCD
+    lcd.setCursor(0,1);                               //mengatur tulisan pada kolom 0 dan baris 1
+    lcd.print("SELAMATKAN DIRI !!");                  //menampilkan tulisan "SELAMATKAN DIRI !!" pada LCD
+    delay(200);                                       //mengatur waktu jeda  
   } else {
-    lcd.clear();
-    digitalWrite(led_hijau, HIGH);
-    digitalWrite(led_merah, LOW);
-    digitalWrite(buzzer, LOW);
-    cekservo.write(0);
-    lcd.setCursor(0,0);
-    lcd.print("TEMP : ");
-    lcd.print(t);
-    lcd.print("'C ");
-    lcd.setCursor(0,1);
-    lcd.print("HUMI : ");
-    lcd.print(h);
-    lcd.print(" %");
-    delay(200); 
+    lcd.clear();                                      //menghapus tulisan pada LCD
+    digitalWrite(led_hijau, HIGH);                    //memberi nilai HIGH pada pin led_hijau
+    digitalWrite(led_merah, LOW);                     //memberi nilai LOW pada pin led_merah
+    digitalWrite(buzzer, LOW);                        //memberi nilai LOW pada pin buzzer
+    cekservo.write(0);                                //mengatur posisi servo ke 0 derajat
+    lcd.setCursor(0,0);                               //mengatur tulisan pada kolom 0 dan baris 0
+    lcd.print("TEMP : ");                             //menampilkan tulisan "TEMP : " pada LCD
+    lcd.print(t);                                     //mengambil nilai dari variabel "t" dan menampilkannya pada LCD
+    lcd.print("'C ");                                 //menampilkan tulisan "'C " pada LCD
+    lcd.setCursor(0,1);                               //mengatur tulisan pada kolom 0 dan baris 1
+    lcd.print("HUMI : ");                             //menampilkan tulisan "HUMI: " pada LCD
+    lcd.print(h);                                     //mengambil nilai dari variabel "h" dan menampilkannya pada LCD
+    lcd.print(" %");                                  //menampilkan tulisan " %" pada LCD
+    delay(200);                                       //mengatur waktu jeda
   }
 
   if (buttonState==1){
-    lcd.clear();
-    cekservo.write(0);
-    digitalWrite(buzzer, LOW);
-    digitalWrite(led_hijau, LOW);
-    digitalWrite(led_merah, LOW);
-    lcd.setCursor(0,0);
-    lcd.print("Sistem");
-    lcd.setCursor(0,1);
-    lcd.print("Direset!!");
-    delay(20000);
+    lcd.clear();                                      //menghapus tulisan pada LCD
+    cekservo.write(0);                                //mengatur posisi servo ke 0 derajat
+    digitalWrite(buzzer, LOW);                        //memberi nilai LOW pada pin buzzer
+    digitalWrite(led_hijau, LOW);                     //memberi nilai LOW pada led_hijau
+    digitalWrite(led_merah, LOW);                     //memberi nilai LOW pada led_merah
+    lcd.setCursor(0,0);                               //mengatur tulisan pada kolom 0 dan baris 0
+    lcd.print("Sistem");                              //menampilkan tulisan "Sistem" pada LCD
+    lcd.setCursor(0,1);                               //mengatur tulisan pada kolom 0 dan baris 1
+    lcd.print("Direset!!");                           //menampilkan tulisan "Direset!!" pada LCD
+    delay(20000);                                     //mengatur waktu jeda
   } 
 
-  antares.add("temperature", t);
-  antares.add("humidity", h);
-  antares.add("fire_units", f);
-  antares.publish(projectName, deviceName);
-  delay(1000);
+  antares.add("temperature", t);                      //menambahkan variabel "temperature" ke buffer
+  antares.add("humidity", h);                         //menambahkan variabel "humidity" ke buffer
+  antares.add("fire_units", f);                       //menambahkan variabel "fire_units" ke buffer
+  antares.publish(projectName, deviceName);           //publish data ke database Antares dan juga broker MQTT Antares
+  delay(1000);                                        //mengatur waktu jeda
 }
