@@ -12,7 +12,7 @@
 #define projectName "Cekapurumiot"                    //mendefinisikan projectName, tuliskan projectname sesuai yang sudah di-inputkan pada Antares
 #define deviceName "CekapurumSensor"                  //mendefinisikan deviceName, tuliskan devicename sesuai yang sudah di-inputkan pada Antares
 
-AntaresESP8266MQTT antares(ACCESSKEY);                //membuat objek Antares
+AntaresESP8266MQTT antares(ACCESSKEY);                //memanggil library antares
 DHT dht(13, DHTTYPE);                                 //membuat objek dht, pin yang digunakan untuk pembacaan sensor adalah pin 13
 Servo cekservo;                                       //membuat objek servo untuk mengontrol servo
 LiquidCrystal_I2C lcd(0x27, 16, 2);                   //I2C address 0x27, ukuran LCD 16x2 
@@ -23,21 +23,20 @@ int led_hijau = 12;                                   //variabel "led_hijau" den
 int buzzer = 0;                                       //variabel "buzzer" dengan tipe data integer, pin 0
 int pinServo = 2;                                     //variabel "pinServo" dengan tipe data integer, pin 2
 int pinFlame = A0;                                    //variabel "pinFlame" dengan tipe data integer, pin A0
-
 int f;                                                //variabel "f" dengan tipe data integer 
 int buttonState;                                      //variabel "buttonState" dengan tipe data integer 
 float h;                                              //variabel "h" / kelembaban dengan tipe data float
 float t;                                              //variabel "t" / suhu dengan tipe data float
-String status_kebakaran;                              
+String status_kebakaran;                              //variabel "status_kebakaran" dengan tipe data string
 
 void setup() {
   Serial.begin(115200);                               //membuka komunikasi serial dengan baudrate(kecepatan transfer data dalam bps) 115200
   antares.setDebug(true);                             //menyalakan debug. Set menjadi "false" jika tidak ingin pesan tampil di serial monitor
   antares.wifiConnection(WIFISSID, PASSWORD);         //mencoba untuk menyambungkan ke Wifi
   antares.setMqttServer();                            //inisiasi server MQTT Antares
-  dht.begin();                                        //inisiasi objek dht
+  dht.begin();                                        //menyalakan sensor suhu&kelembaban
   Wire.begin(4,5);                                    //memulai fungsi dengan menginisiasi port I2C
-  lcd.begin();                                        //menyatakan bagian LCD yang akan digunakan, tulisan akan diletakkan pada baris dan kolom default 
+  lcd.begin();                                        //memulai penggunaan LCD
   lcd.backlight();                                    //menyalakan backlight
   cekservo.attach(pinServo);                          //objek servo mengatur pin yang digunakan
   cekservo.write(0);                                  //mengatur posisi servo ke 0 derajat
@@ -64,8 +63,8 @@ void loop() {
     lcd.print("KEBAKARAN !!");                        //menampilkan tulisan "KEBAKARAN !!" pada LCD
     lcd.setCursor(0,1);                               //mengatur tulisan pada kolom 0 dan baris 1
     lcd.print("SELAMATKAN DIRI !!");                  //menampilkan tulisan "SELAMATKAN DIRI !!" pada LCD
-    status_kebakaran = "Kebakaran";
-    delay(200);                                       //mengatur waktu jeda  
+    status_kebakaran = "Kebakaran";                   //indikator status kebakaran
+    delay(200);                                       //mengatur waktu jeda selama 2 ms
   } else {
     lcd.clear();                                      //menghapus tulisan pada LCD
     digitalWrite(led_hijau, HIGH);                    //memberi nilai HIGH pada pin led_hijau
@@ -80,8 +79,8 @@ void loop() {
     lcd.print("HUMI : ");                             //menampilkan tulisan "HUMI: " pada LCD
     lcd.print(h);                                     //mengambil nilai dari variabel "h" dan menampilkannya pada LCD
     lcd.print(" %");                                  //menampilkan tulisan " %" pada LCD
-    status_kebakaran = "Aman";
-    delay(200);                                       //mengatur waktu jeda
+    status_kebakaran = "Aman";                        //indikator status aman
+    delay(200);                                       //mengatur waktu jeda selama 2 ms
   }
 
   if (buttonState==1){
@@ -94,14 +93,14 @@ void loop() {
     lcd.print("Sistem");                              //menampilkan tulisan "Sistem" pada LCD
     lcd.setCursor(0,1);                               //mengatur tulisan pada kolom 0 dan baris 1
     lcd.print("Direset!!");                           //menampilkan tulisan "Direset!!" pada LCD
-    delay(20000);                                     //mengatur waktu jeda
+    delay(20000);                                     //mengatur waktu jeda selama 20 s
   } 
   
-  antares.add("temperature", t);                      //menambahkan variabel "temperature" ke buffer
-  antares.add("humidity", h);                         //menambahkan variabel "humidity" ke buffer
-  antares.add("fire_units", f);                       //menambahkan variabel "fire_units" ke buffer
-  antares.add("status", status_kebakaran);            
+  antares.add("temperature", t);                      //memasukkan value t kedalam variabel "temperature" pada database Non-SQL
+  antares.add("humidity", h);                         //memasukkan value h kedalam variabel "humidity" pada database Non-SQL
+  antares.add("fire_units", f);                       //memasukkan value f kedalam variabel "fire_units" pada database Non-SQL
+  antares.add("status", status_kebakaran);            //memasukkan value status_kebakaran kedalam variabel "status" pada database Non-SQL
   antares.publish(projectName, deviceName);           //publish data ke database Antares dan juga broker MQTT Antares
-  delay(1000);                                        //mengatur waktu jeda
+  delay(1000);                                        //mengatur waktu jeda selama 1 s
 
 }
