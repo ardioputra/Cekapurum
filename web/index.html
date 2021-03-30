@@ -1,0 +1,22 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cekapurum V.1.1</title>
+</head>
+<body>
+    <h2>Data dibawah ini adalah data yang diterima oleh sensor</h2>
+    <p>Temperatur : <span id="temperatur"></span><br></p>
+    <p>Kelembapan : <span id="kelembapan"></span><br></p>
+    <p>Unit Sensor Api : <span id="fire-sensor"></span><br></p>
+    <p>Status : <span id="status"></span><br></p>
+</body>
+<script src="getapi.js"></script>  
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        getData();
+    })
+</script>
+</html>
