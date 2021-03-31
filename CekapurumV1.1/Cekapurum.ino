@@ -1,4 +1,6 @@
-#include <AntaresESP8266MQTT.h>                       //inisiasi library Antares MQTT 
+#include <AntaresESP8266MQTT.h>                       //inisiasi library Antares MQTT
+#include <ESP8266HTTPClient.h>
+#include <ESP8266WiFi.h> 
 #include <LiquidCrystal_I2C.h>                        //inisiasi library LCD
 #include <Adafruit_Sensor.h>                          //inisiasi library Adafruit
 #include <Wire.h>                                     //inisiasi library komunikasi I2C
@@ -15,7 +17,11 @@
 AntaresESP8266MQTT antares(ACCESSKEY);                //memanggil library antares
 DHT dht(13, DHTTYPE);                                 //membuat objek dht, pin yang digunakan untuk pembacaan sensor adalah pin 13
 Servo cekservo;                                       //membuat objek servo untuk mengontrol servo
-LiquidCrystal_I2C lcd(0x27, 16, 2);                   //I2C address 0x27, ukuran LCD 16x2 
+LiquidCrystal_I2C lcd(0x27, 16, 2);                   //I2C address 0x27, ukuran LCD 16x2
+WiFiClient klien;
+HTTPClient http;
+String Link;
+const char* host = "192.168.1.7";  
 
 int button = 16;                                      //variabel "button" dengan tipe data integer, pin 16
 int led_merah = 14;                                   //variabel "led_merah" dengan tipe data integer, pin 14                          
@@ -34,6 +40,12 @@ void setup() {
   antares.setDebug(true);                             //menyalakan debug. Set menjadi "false" jika tidak ingin pesan tampil di serial monitor
   antares.wifiConnection(WIFISSID, PASSWORD);         //mencoba untuk menyambungkan ke Wifi
   antares.setMqttServer();                            //inisiasi server MQTT Antares
+  WiFi.begin(WIFISSID, PASSWORD);
+  while(WiFi.status() != WL_CONNECTED){
+    Serial.print("Wifi belum terkoneksi");
+    delay(500);
+  }
+  Serial.print("Wifi terkoneksi");
   dht.begin();                                        //menyalakan sensor suhu&kelembaban
   Wire.begin(4,5);                                    //memulai fungsi dengan menginisiasi port I2C
   lcd.begin();                                        //memulai penggunaan LCD
@@ -48,6 +60,10 @@ void setup() {
 void loop() {
   antares.checkMqttConnection();                      //cek koneksi ke broker MQTT Antares. Jika disconnect, akan dicoba untuk menyambungkan lagi
 
+  if(!klien.connect(host, 80)){
+    Serial.print("Koneksi gagal");
+    return;
+  }
   buttonState = digitalRead(button);                  //membaca nilai digital pada pinFlame dan menyimpannya kedalam variabel "buttonState"
   f = analogRead(pinFlame);                           //membaca nilai analog pada pinFlame dan menyimpannya kedalam variable "f"
   t = dht.readTemperature();                          //variabel "t" digunakan untuk membaca suhu
@@ -101,6 +117,12 @@ void loop() {
   antares.add("fire_units", f);                       //memasukkan value f kedalam variabel "fire_units" pada database Non-SQL
   antares.add("status", status_kebakaran);            //memasukkan value status_kebakaran kedalam variabel "status" pada database Non-SQL
   antares.publish(projectName, deviceName);           //publish data ke database Antares dan juga broker MQTT Antares
+
+  Link = "http://192.168.1.7/web/sensor.php?sensor=";
+  http.begin(Link);
+  http.GET();
+  http.end();
+  
   delay(1000);                                        //mengatur waktu jeda selama 1 s
 
 }
