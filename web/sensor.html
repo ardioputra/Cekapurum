@@ -26,10 +26,18 @@
             </ul>
         </div>
     </header>
-    <!--banner-->
-    <section class="banner">
-        <h2>PENCEGAH KEBAKARAN DAPUR RUMAH</h2>
+    <!--sensor-->
+    <section class="sensor">
+        <div class="container">
+            <h3>Data</h3>
+            <p>Berikut merupakan data yang diterima oleh sensor</p>
+            <p>Temperatur : <span id="temperatur"></span><br></p>
+            <p>Kelembapan : <span id="kelembapan"></span><br></p>
+            <p>Unit Sensor Api : <span id="fire-sensor"></span><br></p>
+            <p>Status : <span id="status"></span><br></p>
+        </div>
     </section>
+
     <script type="text/javascript">
         $(document).ready(function(){
             $(".bg-loader").hide();
