@@ -6,9 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cekapurum V.1.1</title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script type="text/javascript" src="jquery/jquery.min.js"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            setInverval(function(){
+                $("#datasensor").load('datasensor.php');
+            }, 1000);
+        });
+    </script>
 </head>
 <body>
     <!--loader-->
@@ -22,7 +29,7 @@
             <ul>
                 <li><a href="index.html">HOME</a></li>
                 <li><a href="about.html">ABOUT</a></li>
-                <li><a href="sensor.html">DATA</a></li>
+                <li><a href="sensor.php">DATA</a></li>
             </ul>
         </div>
     </header>
@@ -31,10 +38,10 @@
         <div class="container">
             <h3>Data</h3>
             <p>Berikut merupakan data yang diterima oleh sensor</p>
-            <p>Temperatur : <span id="temperatur"></span><br></p>
-            <p>Kelembapan : <span id="kelembapan"></span><br></p>
-            <p>Unit Sensor Api : <span id="fire-sensor"></span><br></p>
-            <p>Status : <span id="status"></span><br></p>
+            <p>Temperatur : <span id="datasensor"></span><br></p>
+            <!--<p>Kelembapan : <span id="datasensor"></span><br></p>
+            <p>Unit Sensor Api : <span id="datasensor"></span><br></p>
+            <p>Status : <span id="datasensor"></span><br></p>-->
         </div>
     </section>
 
