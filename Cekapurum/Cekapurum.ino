@@ -21,7 +21,7 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);                   //I2C address 0x27, ukuran
 WiFiClient klien;
 HTTPClient http;
 String Link;
-const char* host = "192.168.1.7";  
+const char* host = "192.168.1.7";                     //ganti sesuai ip address yang digunakan  
 
 int button = 16;                                      //variabel "button" dengan tipe data integer, pin 16
 int led_merah = 14;                                   //variabel "led_merah" dengan tipe data integer, pin 14                          
@@ -42,7 +42,7 @@ void setup() {
   antares.setMqttServer();                            //inisiasi server MQTT Antares
   WiFi.begin(WIFISSID, PASSWORD);
   while(WiFi.status() != WL_CONNECTED){
-    Serial.print("Wifi belum terkoneksi");
+    Serial.println("Wifi belum terkoneksi");
     delay(500);
   }
   Serial.print("Wifi terkoneksi");
@@ -118,11 +118,10 @@ void loop() {
   antares.add("status", status_kebakaran);            //memasukkan value status_kebakaran kedalam variabel "status" pada database Non-SQL
   antares.publish(projectName, deviceName);           //publish data ke database Antares dan juga broker MQTT Antares
 
-  Link = "http://192.168.1.7/web/sensor.php?sensor=";
+  Link = "http://"+String(host)+"/web/senddata.php?temp="+String(t)+"&humi="+String(h)+"&fire="+String(f)+"&stat="+String(status_kebakaran);
   http.begin(Link);
   http.GET();
   http.end();
   
   delay(1000);                                        //mengatur waktu jeda selama 1 s
-
 }
