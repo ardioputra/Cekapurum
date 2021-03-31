@@ -14,14 +14,14 @@
 #define projectName "Cekapurumiot"                    //mendefinisikan projectName, tuliskan projectname sesuai yang sudah di-inputkan pada Antares
 #define deviceName "CekapurumSensor"                  //mendefinisikan deviceName, tuliskan devicename sesuai yang sudah di-inputkan pada Antares
 
-AntaresESP8266MQTT antares(ACCESSKEY);                //memanggil library antares
+//AntaresESP8266MQTT antares(ACCESSKEY);                //memanggil library antares
 DHT dht(13, DHTTYPE);                                 //membuat objek dht, pin yang digunakan untuk pembacaan sensor adalah pin 13
 Servo cekservo;                                       //membuat objek servo untuk mengontrol servo
 LiquidCrystal_I2C lcd(0x27, 16, 2);                   //I2C address 0x27, ukuran LCD 16x2
 WiFiClient klien;
 HTTPClient http;
 String Link;
-const char* host = "192.168.1.7";                     //ganti sesuai ip address yang digunakan  
+const char* host = "192.168.43.249";                     //ganti sesuai ip address yang digunakan  
 
 int button = 16;                                      //variabel "button" dengan tipe data integer, pin 16
 int led_merah = 14;                                   //variabel "led_merah" dengan tipe data integer, pin 14                          
@@ -37,9 +37,9 @@ String status_kebakaran;                              //variabel "status_kebakar
 
 void setup() {
   Serial.begin(115200);                               //membuka komunikasi serial dengan baudrate(kecepatan transfer data dalam bps) 115200
-  antares.setDebug(true);                             //menyalakan debug. Set menjadi "false" jika tidak ingin pesan tampil di serial monitor
+ /* antares.setDebug(true);                             //menyalakan debug. Set menjadi "false" jika tidak ingin pesan tampil di serial monitor
   antares.wifiConnection(WIFISSID, PASSWORD);         //mencoba untuk menyambungkan ke Wifi
-  antares.setMqttServer();                            //inisiasi server MQTT Antares
+  antares.setMqttServer();*/                            //inisiasi server MQTT Antares
   WiFi.begin(WIFISSID, PASSWORD);
   while(WiFi.status() != WL_CONNECTED){
     Serial.println("Wifi belum terkoneksi");
@@ -58,7 +58,7 @@ void setup() {
 }
 
 void loop() {
-  antares.checkMqttConnection();                      //cek koneksi ke broker MQTT Antares. Jika disconnect, akan dicoba untuk menyambungkan lagi
+ // antares.checkMqttConnection();                      //cek koneksi ke broker MQTT Antares. Jika disconnect, akan dicoba untuk menyambungkan lagi
 
   if(!klien.connect(host, 80)){
     Serial.print("Koneksi gagal");
@@ -68,6 +68,21 @@ void loop() {
   f = analogRead(pinFlame);                           //membaca nilai analog pada pinFlame dan menyimpannya kedalam variable "f"
   t = dht.readTemperature();                          //variabel "t" digunakan untuk membaca suhu
   h = dht.readHumidity();                             //variabel "h" digunakan untuk membaca kelembaban
+  if(isnan(t)){
+    Serial.println("Data Nan!");
+  } else {
+    Serial.print("Units Fire Sensor : ");
+    Serial.print(f);
+    Serial.print(" Units / ");
+    Serial.print("Suhu : ");
+    Serial.print(t);
+    Serial.print("°");
+    Serial.print("C / ");
+    Serial.print("Kelembaban: ");
+    Serial.print(h);
+    Serial.print(" %\n");
+    delay(250);
+  }
   
   if(f<100 && t>35 && h<50){
     lcd.clear();                                      //menghapus tulisan pada LCD
@@ -112,15 +127,17 @@ void loop() {
     delay(20000);                                     //mengatur waktu jeda selama 20 s
   } 
   
-  antares.add("temperature", t);                      //memasukkan value t kedalam variabel "temperature" pada database Non-SQL
+  /*antares.add("temperature", t);                      //memasukkan value t kedalam variabel "temperature" pada database Non-SQL
   antares.add("humidity", h);                         //memasukkan value h kedalam variabel "humidity" pada database Non-SQL
   antares.add("fire_units", f);                       //memasukkan value f kedalam variabel "fire_units" pada database Non-SQL
   antares.add("status", status_kebakaran);            //memasukkan value status_kebakaran kedalam variabel "status" pada database Non-SQL
-  antares.publish(projectName, deviceName);           //publish data ke database Antares dan juga broker MQTT Antares
+  antares.publish(projectName, deviceName); */         //publish data ke database Antares dan juga broker MQTT Antares
 
-  Link = "http://"+String(host)+"/web/senddata.php?temp="+String(t)+"&humi="+String(h)+"&fire="+String(f)+"&stat="+String(status_kebakaran);
+  Link = "http://" + String(host) + "/web/senddata.php?temp=" + String(t) + "&humi=" + String(h) + "&fire=" + String(f) + "&stat=" + String(status_kebakaran);
   http.begin(Link);
   http.GET();
+  String respon = http.getString();
+  Serial.println(respon);
   http.end();
   
   delay(1000);                                        //mengatur waktu jeda selama 1 s
