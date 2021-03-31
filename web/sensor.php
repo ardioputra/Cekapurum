@@ -11,8 +11,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap" rel="stylesheet">
     <script type="text/javascript">
         $(document).ready(function(){
-            setInverval(function(){
-                $("#datasensor").load('datasensor.php');
+            setInterval(function(){
+                $("#sensortemp").load('sensortemp.php');
+                $("#sensorhumi").load('sensorhumi.php');
+                $("#sensorfire").load('sensorfire.php');
+                $("#sensorstat").load('sensorstat.php');
             }, 1000);
         });
     </script>
@@ -38,10 +41,10 @@
         <div class="container">
             <h3>Data</h3>
             <p>Berikut merupakan data yang diterima oleh sensor</p>
-            <p>Temperatur : <span id="datasensor"></span><br></p>
-            <!--<p>Kelembapan : <span id="datasensor"></span><br></p>
-            <p>Unit Sensor Api : <span id="datasensor"></span><br></p>
-            <p>Status : <span id="datasensor"></span><br></p>-->
+            <p>Temperatur : <span id="sensortemp"></span><br></p>
+            <p>Kelembapan : <span id="sensorhumi"></span><br></p>
+            <p>Unit Sensor Api : <span id="sensorfire"></span><br></p>
+            <p>Status : <span id="sensorstat"></span><br></p>
         </div>
     </section>
 
@@ -51,10 +54,4 @@
         })
     </script>
 </body>
-<script src="getapi.js"></script>  
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        getData();
-    })
-</script>
 </html>
