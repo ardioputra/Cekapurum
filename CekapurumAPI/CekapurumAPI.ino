@@ -113,13 +113,18 @@ void loop() {
     lcd.print("Sistem");                              //menampilkan tulisan "Sistem" pada LCD
     lcd.setCursor(0,1);                               //mengatur tulisan pada kolom 0 dan baris 1
     lcd.print("Direset!!");                           //menampilkan tulisan "Direset!!" pada LCD
+    antares.add("temperature", t);                      //memasukkan value t kedalam variabel "temperature" pada database Non-SQL
+    antares.add("humidity", h);                         //memasukkan value h kedalam variabel "humidity" pada database Non-SQL
+    antares.add("fire_units", f);                       //memasukkan value f kedalam variabel "fire_units" pada database Non-SQL
+    antares.add("status", status_kebakaran);            //memasukkan value status_kebakaran kedalam variabel "status" pada database Non-SQL
+    antares.publish(projectName, deviceName); 
     delay(20000);                                     //mengatur waktu jeda selama 20 s
-  } 
-  
-  antares.add("temperature", t);                      //memasukkan value t kedalam variabel "temperature" pada database Non-SQL
-  antares.add("humidity", h);                         //memasukkan value h kedalam variabel "humidity" pada database Non-SQL
-  antares.add("fire_units", f);                       //memasukkan value f kedalam variabel "fire_units" pada database Non-SQL
-  antares.add("status", status_kebakaran);            //memasukkan value status_kebakaran kedalam variabel "status" pada database Non-SQL
-  antares.publish(projectName, deviceName);            //publish data ke database Antares dan juga broker MQTT Antares
-  delay(1000);                                        //mengatur waktu jeda selama 1 s
+  } else {
+    antares.add("temperature", t);                      //memasukkan value t kedalam variabel "temperature" pada database Non-SQL
+    antares.add("humidity", h);                         //memasukkan value h kedalam variabel "humidity" pada database Non-SQL
+    antares.add("fire_units", f);                       //memasukkan value f kedalam variabel "fire_units" pada database Non-SQL
+    antares.add("status", status_kebakaran);            //memasukkan value status_kebakaran kedalam variabel "status" pada database Non-SQL
+    antares.publish(projectName, deviceName);            //publish data ke database Antares dan juga broker MQTT Antares
+    delay(1000);                                        //mengatur waktu jeda selama 1 s
+  }
 }
