@@ -62,10 +62,19 @@
     <section class="sensor">
         <div class="container">
             <h3>Data</h3>
-            <p>Status perangkat : <span id="koneksi">-</span></p>
+            <div style="display: flex; ">
+                <div class="card text-center" style="width: 100%">
+                    <div class="card-header" style="font-size: 20px; font-weight: bold; background-color: grey">
+                        Status Perangkat
+                    </div>
+                    <div class="card-body">
+                        <h4><span id="koneksi">-</span></h4>
+                    </div>
+                </div>
+            </div>
         <div style="display: flex; ">
             <!--suhu-->
-        <div class="card text-center" style="width: 25%">
+        <div class="card text-center" style="width: 33%">
             <div class="card-header" style="font-size: 20px; font-weight: bold; background-color: grey">
                 <i class="bi bi-thermometer-sun"></i> Temperature
             </div>
@@ -73,9 +82,9 @@
              <h4><span id="temp">-</span> &#8451;</h4>
             </div>
         </div>
-
+        
             <!--kelembaban-->
-        <div class="card text-center" style="width: 25%">
+        <div class="card text-center" style="width: 33%">
             <div class="card-header" style="font-size: 20px; font-weight: bold; background-color: grey">
                 <i class="bi bi-moisture"></i> Humidity
             </div>
@@ -85,7 +94,7 @@
         </div>
 
             <!--fire-->
-        <div class="card text-center" style="width: 25%">
+        <div class="card text-center" style="width: 34%">
             <div class="card-header" style="font-size: 20px; font-weight: bold; background-color: grey">
                 <i class="bi bi-exclamation-diamond"></i> Fire Sensor
             </div>
@@ -93,17 +102,15 @@
              <h4><span id="fire">-</span> Units </h4>
             </div>
         </div>
-
-            <!--status-->
-        <div class="card text-center" style="width: 25%">
+        </div>
+        <!--status-->
+        <div class="card text-center" style="width: 100%">
             <div class="card-header" style="font-size: 20px; font-weight: bold; background-color: grey">
                 <i class="bi bi-question-octagon"></i> Status
             </div>
             <div class="card-body">
-             <h4><span id="stat">-</span></h4>
+                <h4><span id="stat">-</span></h4>
             </div>
-        </div>
-
         </div>  
     </section>
 </body>
