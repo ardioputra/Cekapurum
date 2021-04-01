@@ -101,6 +101,10 @@ void loop() {
 
   if (buttonState==1){
     lcd.clear();                                      //menghapus tulisan pada LCD
+    t = 0;
+    h = 0;
+    f = 0;
+    status_kebakaran = "Resetting";
     cekservo.write(0);                                //mengatur posisi servo ke 0 derajat
     digitalWrite(buzzer, LOW);                        //memberi nilai LOW pada pin buzzer
     digitalWrite(led_hijau, LOW);                     //memberi nilai LOW pada led_hijau
