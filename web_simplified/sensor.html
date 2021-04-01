@@ -5,6 +5,7 @@
     <link rel="icon" type="image/png" href="img/fire.png">
   <title>Data Output Cekapurum</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="css/style.css">
   <script type="text/javascript" src="jquery/jquery.min.js"></script>
   <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -50,21 +51,21 @@
     
     <header>
         <div class="container"> 
-            <h1><a href="index.html">CEKAPURUM</a></h1>
+            <h1><a href="index.html" style="text-decoration:none">CEKAPURUM</a></h1>
             <ul>
-                <li><a href="index.html">HOME</a></li>
-                <li><a href="about.html">ABOUT</a></li>
-                <li><a href="sensor.html">DATA</a></li>
+                <li><a href="index.html" style="text-decoration:none">HOME</a></li>
+                <li><a href="about.html" style="text-decoration:none">ABOUT</a></li>
+                <li><a href="sensor.html" style="text-decoration:none">DATA</a></li>
             </ul>
         </div>
     </header>
 
     <section class="sensor">
         <div class="container">
-            <h3>Data</h3>
+            <h2>DATA</h2>
             <div style="display: flex; ">
                 <div class="card text-center" style="width: 100%">
-                    <div class="card-header" style="font-size: 20px; font-weight: bold; background-color: grey">
+                    <div class="card-header" style="font-size: 20px; font-weight: bold; background-color:gold ">
                         Status Perangkat
                     </div>
                     <div class="card-body">
@@ -75,7 +76,7 @@
         <div style="display: flex; ">
             <!--suhu-->
         <div class="card text-center" style="width: 33%">
-            <div class="card-header" style="font-size: 20px; font-weight: bold; background-color: grey">
+            <div class="card-header" style="font-size: 20px; font-weight: bold; background-color: gold">
                 <i class="bi bi-thermometer-sun"></i> Temperature
             </div>
             <div class="card-body">
@@ -85,7 +86,7 @@
         
             <!--kelembaban-->
         <div class="card text-center" style="width: 33%">
-            <div class="card-header" style="font-size: 20px; font-weight: bold; background-color: grey">
+            <div class="card-header" style="font-size: 20px; font-weight: bold; background-color: gold">
                 <i class="bi bi-moisture"></i> Humidity
             </div>
             <div class="card-body">
@@ -95,7 +96,7 @@
 
             <!--fire-->
         <div class="card text-center" style="width: 34%">
-            <div class="card-header" style="font-size: 20px; font-weight: bold; background-color: grey">
+            <div class="card-header" style="font-size: 20px; font-weight: bold; background-color: gold">
                 <i class="bi bi-exclamation-diamond"></i> Fire Sensor
             </div>
             <div class="card-body">
@@ -105,7 +106,7 @@
         </div>
         <!--status-->
         <div class="card text-center" style="width: 100%">
-            <div class="card-header" style="font-size: 20px; font-weight: bold; background-color: grey">
+            <div class="card-header" style="font-size: 20px; font-weight: bold; background-color: gold">
                 <i class="bi bi-question-octagon"></i> Status
             </div>
             <div class="card-body">
@@ -114,9 +115,5 @@
         </div>  
     </section>
 </body>
-<script type="text/javascript">
-    $(document).ready(function(){
-        $(".bg-loader").hide();
-    })
 </script>
 </html>
