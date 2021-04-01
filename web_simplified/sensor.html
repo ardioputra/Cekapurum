@@ -19,16 +19,22 @@
 					dataType: 'json',
 					success:function(data){
 						console.log(data);
+                        if(data.status == "Resetting"){
+                            $("#koneksi").text("Perangkat Direset");
+                        } else {
+                            $("#koneksi").text("Perangkat sudah terhubung");
+                        }
 						$("#temp").text(data.temperature); //sesuaikan variabel dengan antares
 						$("#humi").text(data.humidity); //sesuaikan variabel dengan antares
 						$("#fire").text(data.fire_units); //sesuaikan variabel dengan antares
 						$("#stat").text(data.status); //sesuaikan variabel dengan antares
 					},
 					error:function(data){
+                        $("#koneksi").text("Perangkat belum terhubung");
 						$("#temp").text("NaN"); //sesuaikan variabel dengan antares
 						$("#humi").text("NaN"); //sesuaikan variabel dengan antares
 						$("#fire").text("NaN"); //sesuaikan variabel dengan antares
-						$("#stat").text("NaN"); //sesuaikan variabel dengan antares
+						$("#stat").text("Belum tersambung"); //sesuaikan variabel dengan antares
 					}
 				});
 			},1000)
@@ -56,8 +62,8 @@
     <section class="sensor">
         <div class="container">
             <h3>Data</h3>
+            <p>Status perangkat : <span id="koneksi">-</span></p>
         <div style="display: flex; ">
-
             <!--suhu-->
         <div class="card text-center" style="width: 25%">
             <div class="card-header" style="font-size: 20px; font-weight: bold; background-color: grey">
