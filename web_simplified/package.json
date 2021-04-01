@@ -1,0 +1,16 @@
+{
+  "name": "web_simplified",
+  "version": "1.0.0",
+  "description": "Install node js : https://blogs.masterweb.com/cara-install-npm-di-windows/#Cara_Install_NPM_di_Windows",
+  "main": "scripts.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "antares-http": "^1.0.4",
+    "bootstrap-icons": "^1.4.1",
+    "express": "^4.17.1"
+  }
+}
