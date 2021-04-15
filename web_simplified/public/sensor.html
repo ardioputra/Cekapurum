@@ -16,7 +16,7 @@
         $(document).ready(function() {
             setInterval(function() {
                 $.ajax({
-                    url: 'http://localhost:3000/',
+                    url: 'http://localhost:3000/data',
                     dataType: 'json',
                     success: function(data) {
                         console.log(data);
