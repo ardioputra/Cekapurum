@@ -16,9 +16,16 @@
         $(document).ready(function() {
             setInterval(function() {
                 $.ajax({
-                    url: 'http://localhost:3000/data',
+                    url: 'http://cekapurum-data.herokuapp.com/https://platform.antares.id:8443/~/antares-cse/antares-id/Cekapurumiot/CekapurumSensor/la',
+                    method: 'GET',
+                    headers: {
+                        'X-M2M-Origin': '6e6b74ca7ead77f7:09437f0a4cc56904',
+                        'Content-Type': 'application/json;ty=4',
+                        'Accept': 'application/json'
+                    },
                     dataType: 'json',
-                    success: function(data) {
+                    success: function(response) {
+                        data = JSON.parse(response["m2m:cin"].con);
                         console.log(data);
                         if (data.status == "Resetting") {
                             $("#koneksi").text("Perangkat Direset");
