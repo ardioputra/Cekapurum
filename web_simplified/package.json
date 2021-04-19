@@ -1,7 +1,7 @@
 {
     "name": "web_simplified",
     "version": "1.0.0",
-    "description": "Install node js : https://blogs.masterweb.com/cara-install-npm-di-windows/#Cara_Install_NPM_di_Windows",
+    "description": "using nodejs for website",
     "main": "scripts.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,8 +12,5 @@
         "antares-http": "^1.0.4",
         "bootstrap-icons": "^1.4.1",
         "express": "^4.17.1"
-    },
-    "scripts": {
-        "start": "node scripts.js"
     }
 }
