@@ -102,7 +102,7 @@ void loop() {
   if (buttonState==1){
     lcd.clear();                                      //menghapus tulisan pada LCD
     t = 0;
-    h = 0;
+    h = 0;                                            //inserting parameter
     f = 0;
     status_kebakaran = "Resetting";
     cekservo.write(0);                                //mengatur posisi servo ke 0 derajat
