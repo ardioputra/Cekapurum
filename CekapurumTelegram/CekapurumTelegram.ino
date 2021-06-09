@@ -16,7 +16,7 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);                   //I2C address 0x27, ukuran
 CTBot telbot;
 
 String token = "1712858768:AAG51kDQrTJ8VuiqwzkgZ48Slr_vj5qtcYc";  //ganti sesuai telegram
-const int idtel = 1078516139;                                     //ganti sesuai telegram
+const int idtel = 1361986546;                                     //ganti sesuai telegram
 int button = 16;                                      //variabel "button" dengan tipe data integer, pin 16
 int led_merah = 14;                                   //variabel "led_merah" dengan tipe data integer, pin 14                          
 int led_hijau = 12;                                   //variabel "led_hijau" dengan tipe data integer, pin 12
@@ -121,7 +121,15 @@ void loop() {
       lcd.setCursor(0,1);                               //mengatur tulisan pada kolom 0 dan baris 1
       lcd.print("Direset!!");                           //menampilkan tulisan "Direset!!" pada LCD
       delay(20000);                                     //mengatur waktu jeda selama 20 s
+    }if (pesan == "y"){
+         telbot.sendMessage(idtel, "Membuka katup!" );
+         cekservo.write(90);
+         telbot.sendMessage(idtel, "Katup terbuka" );
+         delay(1000);
     }
+    if(pesan == "n"){
+        telbot.sendMessage(idtel, "Katup tetap tertutup, Terima kasih atas Feedbacknya!" );
+        }
     if(pesan=="stats"){
       telbot.sendMessage(idtel, "Laporan yang ditangkap oleh CEKAPURUM saat ini");
       telbot.sendMessage(idtel, "Status : " + status_kebakaran + ", Temperature :" + t + ", Humidity :" + t + ", Fire Sensor :" + f ); 
@@ -133,19 +141,7 @@ void loop() {
     telbot.sendMessage(idtel, "Berikut Laporan yang ditangkap oleh CEKAPURUM");
     telbot.sendMessage(idtel, "Status : " + status_kebakaran + ", Temperature :" + t + ", Humidity :" + t + ", Fire Sensor :" + f );
     telbot.sendMessage(idtel, "Balas \"y\" apabila anda menyetujui untuk membuka katup dry chemical, Balas \"n\" apabila anda menganggap hanya false alarm" );
-    if(telbot.getNewMessage(msg)){
-      delay(10000);
-      String pesan = msg.text;
-      if(pesan="n"){
-        telbot.sendMessage(idtel, "Katup tetap tertutup, Terima kasih atas Feedbacknya!" );
-        } else {
-          telbot.sendMessage(idtel, "Membuka katup!" );
-          cekservo.write(90);
-          telbot.sendMessage(idtel, "Katup terbuka" );
-          delay(1000);
-          }
-          }
-          }
+    }
           
 
   if (buttonState==1){
