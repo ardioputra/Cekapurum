@@ -6,7 +6,6 @@
 #include "CTBot.h";
 
 #define DHTTYPE DHT11                                 //sensor DHT yang digunakan adalah tipe DHT11
-#define ACCESSKEY "6e6b74ca7ead77f7:09437f0a4cc56904" //mendefinisikan ACCESSKEY, ganti dengan Access Key yang terdapat di akun Antares
 #define WIFISSID "dikry"                              //mendefinisikan WIFISSID, ganti dengan SSID Wifi anda
 #define PASSWORD "123dikri"                           //mendefinisikan PASSWORD, ganti dengan password Wifi anda
 
@@ -56,23 +55,6 @@ void loop() {
   f = analogRead(pinFlame);                           //membaca nilai analog pada pinFlame dan menyimpannya kedalam variable "f"
   t = dht.readTemperature();                          //variabel "t" digunakan untuk membaca suhu
   h = dht.readHumidity();                             //variabel "h" digunakan untuk membaca kelembaban
-  if(isnan(t)){
-    Serial.println("Data Nan!");
-  } else {
-    Serial.print("Units Fire Sensor : ");
-    Serial.print(f);
-    Serial.print(" Units / ");
-    Serial.print("Suhu : ");
-    Serial.print(t);
-    Serial.print("°");
-    Serial.print("C / ");
-    Serial.print("Kelembaban: ");
-    Serial.print(h);
-    Serial.print(" %\n");
-    Serial.print("Status: ");
-    Serial.println(status_kebakaran);
-    delay(250);
-  }
   
   if(f<100 && t>35 && h<50){
     lcd.clear();                                      //menghapus tulisan pada LCD
@@ -102,9 +84,28 @@ void loop() {
     status_kebakaran = "Aman";                        //indikator status aman
     delay(200);                                       //mengatur waktu jeda selama 2 ms
   }
-
+  
+  if(isnan(t)){
+    Serial.println("Data Nan!");
+  } else {
+    Serial.print("Units Fire Sensor : ");
+    Serial.print(f);
+    Serial.print(" Units / ");
+    Serial.print("Suhu : ");
+    Serial.print(t);
+    Serial.print("°");
+    Serial.print("C / ");
+    Serial.print("Kelembaban: ");
+    Serial.print(h);
+    Serial.print(" %\n");
+    Serial.print("Status: ");
+    Serial.println(status_kebakaran);
+    delay(250);
+  }
+  
   if(telbot.getNewMessage(msg)){
     String pesan = msg.text;
+    
     if(pesan=="reset"){
       telbot.sendMessage(idtel, "Sistem Direset!, Silahkan Cek CEKAPURUM");
       lcd.clear();                                      //menghapus tulisan pada LCD
@@ -121,43 +122,45 @@ void loop() {
       lcd.setCursor(0,1);                               //mengatur tulisan pada kolom 0 dan baris 1
       lcd.print("Direset!!");                           //menampilkan tulisan "Direset!!" pada LCD
       delay(20000);                                     //mengatur waktu jeda selama 20 s
-    }if (pesan == "y"){
-         telbot.sendMessage(idtel, "Membuka katup!" );
-         cekservo.write(90);
-         telbot.sendMessage(idtel, "Katup terbuka" );
-         delay(1000);
     }
-    if(pesan == "n"){
-        telbot.sendMessage(idtel, "Katup tetap tertutup, Terima kasih atas Feedbacknya!" );
-        }
+     
+    if(pesan=="y") {
+      telbot.sendMessage(idtel, "Membuka katup!" );
+      cekservo.write(90);
+      telbot.sendMessage(idtel, "Katup terbuka" );
+      } 
+    
+    if(pesan=="n"){
+      telbot.sendMessage(idtel, "Katup tetap tertutup, Terima kasih atas Feedbacknya!" );
+    }
+    
     if(pesan=="stats"){
       telbot.sendMessage(idtel, "Laporan yang ditangkap oleh CEKAPURUM saat ini");
       telbot.sendMessage(idtel, "Status : " + status_kebakaran + ", Temperature :" + t + ", Humidity :" + t + ", Fire Sensor :" + f ); 
     }
+ }
+ 
+ if(status_kebakaran == "Kebakaran"){
+  telbot.sendMessage(idtel, "CEKAPURUM mendeteksi kebakaran, apakah benar prediksi CEKAPURUM?");
+  telbot.sendMessage(idtel, "Berikut Laporan yang ditangkap oleh CEKAPURUM");
+  telbot.sendMessage(idtel, "Status : " + status_kebakaran + ", Temperature :" + t + ", Humidity :" + t + ", Fire Sensor :" + f );
+  telbot.sendMessage(idtel, "Balas \"y\" apabila anda menyetujui untuk membuka katup dry chemical, Balas \"n\" apabila anda menganggap hanya false alarm" );
   }
   
-  if(status_kebakaran == "Kebakaran"){
-    telbot.sendMessage(idtel, "CEKAPURUM mendeteksi kebakaran, apakah benar prediksi CEKAPURUM?");
-    telbot.sendMessage(idtel, "Berikut Laporan yang ditangkap oleh CEKAPURUM");
-    telbot.sendMessage(idtel, "Status : " + status_kebakaran + ", Temperature :" + t + ", Humidity :" + t + ", Fire Sensor :" + f );
-    telbot.sendMessage(idtel, "Balas \"y\" apabila anda menyetujui untuk membuka katup dry chemical, Balas \"n\" apabila anda menganggap hanya false alarm" );
-    }
-          
-
-  if (buttonState==1){
-    lcd.clear();                                      //menghapus tulisan pada LCD
-    t = 0;
-    h = 0;
-    f = 0;
-    status_kebakaran = "Resetting";
-    cekservo.write(0);                                //mengatur posisi servo ke 0 derajat
-    digitalWrite(buzzer, LOW);                        //memberi nilai LOW pada pin buzzer
-    digitalWrite(led_hijau, LOW);                     //memberi nilai LOW pada led_hijau
-    digitalWrite(led_merah, LOW);                     //memberi nilai LOW pada led_merah
-    lcd.setCursor(0,0);                               //mengatur tulisan pada kolom 0 dan baris 0
-    lcd.print("Sistem");                              //menampilkan tulisan "Sistem" pada LCD
-    lcd.setCursor(0,1);                               //mengatur tulisan pada kolom 0 dan baris 1
-    lcd.print("Direset!!");                           //menampilkan tulisan "Direset!!" pada LCD 
-    delay(20000);                                     //mengatur waktu jeda selama 20 s
+ if (buttonState==1){
+  lcd.clear();                                      //menghapus tulisan pada LCD
+  t = 0;
+  h = 0;
+  f = 0;
+  status_kebakaran = "Resetting";
+  cekservo.write(0);                                //mengatur posisi servo ke 0 derajat
+  digitalWrite(buzzer, LOW);                        //memberi nilai LOW pada pin buzzer
+  digitalWrite(led_hijau, LOW);                     //memberi nilai LOW pada led_hijau
+  digitalWrite(led_merah, LOW);                     //memberi nilai LOW pada led_merah
+  lcd.setCursor(0,0);                               //mengatur tulisan pada kolom 0 dan baris 0
+  lcd.print("Sistem");                              //menampilkan tulisan "Sistem" pada LCD
+  lcd.setCursor(0,1);                               //mengatur tulisan pada kolom 0 dan baris 1
+  lcd.print("Direset!!");                           //menampilkan tulisan "Direset!!" pada LCD 
+  delay(20000);                                     //mengatur waktu jeda selama 20 s
   }
 }
