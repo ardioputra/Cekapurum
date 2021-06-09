@@ -1,4 +1,3 @@
-#include <AntaresESP8266MQTT.h>                       //inisiasi library Antares MQTT
 #include <LiquidCrystal_I2C.h>                        //inisiasi library LCD
 #include <Adafruit_Sensor.h>                          //inisiasi library Adafruit
 #include <Wire.h>                                     //inisiasi library komunikasi I2C
@@ -10,10 +9,7 @@
 #define ACCESSKEY "6e6b74ca7ead77f7:09437f0a4cc56904" //mendefinisikan ACCESSKEY, ganti dengan Access Key yang terdapat di akun Antares
 #define WIFISSID "dikry"                              //mendefinisikan WIFISSID, ganti dengan SSID Wifi anda
 #define PASSWORD "123dikri"                           //mendefinisikan PASSWORD, ganti dengan password Wifi anda
-#define projectName "Cekapurumiot"                    //mendefinisikan projectName, tuliskan projectname sesuai yang sudah di-inputkan pada Antares
-#define deviceName "CekapurumSensor"                  //mendefinisikan deviceName, tuliskan devicename sesuai yang sudah di-inputkan pada Antares
 
-AntaresESP8266MQTT antares(ACCESSKEY);                //memanggil library antares
 DHT dht(13, DHTTYPE);                                 //membuat objek dht, pin yang digunakan untuk pembacaan sensor adalah pin 13
 Servo cekservo;                                       //membuat objek servo untuk mengontrol servo
 LiquidCrystal_I2C lcd(0x27, 16, 2);                   //I2C address 0x27, ukuran LCD 16x2 
@@ -37,9 +33,6 @@ void setup() {
   Serial.begin(115200);                               //membuka komunikasi serial dengan baudrate(kecepatan transfer data dalam bps) 115200
   telbot.wifiConnect(WIFISSID, PASSWORD);
   telbot.setTelegramToken(token);
-  antares.setDebug(true);                             //menyalakan debug. Set menjadi "false" jika tidak ingin pesan tampil di serial monitor
-  antares.wifiConnection(WIFISSID, PASSWORD);         //mencoba untuk menyambungkan ke Wifi
-  antares.setMqttServer();                           //inisiasi server MQTT Antares
   Serial.print("Wifi terkoneksi");
   if(telbot.testConnection()){
     Serial.println("Koneksi Berhasil");
@@ -59,8 +52,6 @@ void setup() {
 
 void loop() {
   TBMessage msg; 
-  antares.checkMqttConnection();                      //cek koneksi ke broker MQTT Antares. Jika disconnect, akan dicoba untuk menyambungkan lagi
-
   buttonState = digitalRead(button);                  //membaca nilai digital pada pinFlame dan menyimpannya kedalam variabel "buttonState"
   f = analogRead(pinFlame);                           //membaca nilai analog pada pinFlame dan menyimpannya kedalam variable "f"
   t = dht.readTemperature();                          //variabel "t" digunakan untuk membaca suhu
@@ -126,11 +117,6 @@ void loop() {
           lcd.print("Sistem");                              //menampilkan tulisan "Sistem" pada LCD
           lcd.setCursor(0,1);                               //mengatur tulisan pada kolom 0 dan baris 1
           lcd.print("Direset!!");                           //menampilkan tulisan "Direset!!" pada LCD
-          antares.add("temperature", t);                      //memasukkan value t kedalam variabel "temperature" pada database Non-SQL
-          antares.add("humidity", h);                         //memasukkan value h kedalam variabel "humidity" pada database Non-SQL
-          antares.add("fire_units", f);                       //memasukkan value f kedalam variabel "fire_units" pada database Non-SQL
-          antares.add("status", status_kebakaran);            //memasukkan value status_kebakaran kedalam variabel "status" pada database Non-SQL
-          antares.publish(projectName, deviceName); 
           delay(20000);                                     //mengatur waktu jeda selama 20 s
     }
     if(pesan=="stat"){
@@ -146,6 +132,8 @@ void loop() {
         telbot.sendMessage(idtel, "Membuka katup!" );
         cekservo.write(90);
         telbot.sendMessage(idtel, "Katup terbuka" );
+        delay(1000);
+        cekservo.write(0);
       } else if (pesan="n"){
         telbot.sendMessage(idtel, "Katup tetap tertutup, Terima kasih atas Feedbacknya!" );
       }
@@ -165,19 +153,7 @@ void loop() {
     lcd.setCursor(0,0);                               //mengatur tulisan pada kolom 0 dan baris 0
     lcd.print("Sistem");                              //menampilkan tulisan "Sistem" pada LCD
     lcd.setCursor(0,1);                               //mengatur tulisan pada kolom 0 dan baris 1
-    lcd.print("Direset!!");                           //menampilkan tulisan "Direset!!" pada LCD
-    antares.add("temperature", t);                      //memasukkan value t kedalam variabel "temperature" pada database Non-SQL
-    antares.add("humidity", h);                         //memasukkan value h kedalam variabel "humidity" pada database Non-SQL
-    antares.add("fire_units", f);                       //memasukkan value f kedalam variabel "fire_units" pada database Non-SQL
-    antares.add("status", status_kebakaran);            //memasukkan value status_kebakaran kedalam variabel "status" pada database Non-SQL
-    antares.publish(projectName, deviceName); 
+    lcd.print("Direset!!");                           //menampilkan tulisan "Direset!!" pada LCD 
     delay(20000);                                     //mengatur waktu jeda selama 20 s
-  } else {
-    antares.add("temperature", t);                      //memasukkan value t kedalam variabel "temperature" pada database Non-SQL
-    antares.add("humidity", h);                         //memasukkan value h kedalam variabel "humidity" pada database Non-SQL
-    antares.add("fire_units", f);                       //memasukkan value f kedalam variabel "fire_units" pada database Non-SQL
-    antares.add("status", status_kebakaran);            //memasukkan value status_kebakaran kedalam variabel "status" pada database Non-SQL
-    antares.publish(projectName, deviceName);            //publish data ke database Antares dan juga broker MQTT Antares
-    delay(1000);                                        //mengatur waktu jeda selama 1 s
   }
 }
