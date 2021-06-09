@@ -70,7 +70,7 @@ void loop() {
     Serial.print(h);
     Serial.print(" %\n");
     Serial.print("Status: ");
-    Serial.print(status_kebakaran);
+    Serial.println(status_kebakaran);
     delay(250);
   }
   
@@ -105,20 +105,6 @@ void loop() {
 
   if(telbot.getNewMessage(msg)){
     String pesan = msg.text;
-    if(status_kebakaran == "Kebakaran"){
-      telbot.sendMessage(idtel, "CEKAPURUM mendeteksi kebakaran, apakah benar prediksi CEKAPURUM?");
-      telbot.sendMessage(idtel, "Berikut Laporan yang ditangkap oleh CEKAPURUM");
-      telbot.sendMessage(idtel, "Status : " + status_kebakaran + ", Temperature :" + t + ", Humidity :" + t + ", Fire Sensor :" + f );
-      telbot.sendMessage(idtel, "Balas \"y\" apabila anda menyetujui untuk membuka katup dry chemical, Balas \"n\" apabila anda menganggap hanya false alarm" );
-      if(pesan="y"){
-        telbot.sendMessage(idtel, "Membuka katup!" );
-        cekservo.write(90);
-        telbot.sendMessage(idtel, "Katup terbuka" );
-        delay(1000);
-      } else if (pesan="n"){
-        telbot.sendMessage(idtel, "Katup tetap tertutup, Terima kasih atas Feedbacknya!" );
-      }
-    }
     if(pesan=="reset"){
       telbot.sendMessage(idtel, "Sistem Direset!, Silahkan Cek CEKAPURUM");
       lcd.clear();                                      //menghapus tulisan pada LCD
@@ -141,6 +127,26 @@ void loop() {
       telbot.sendMessage(idtel, "Status : " + status_kebakaran + ", Temperature :" + t + ", Humidity :" + t + ", Fire Sensor :" + f ); 
     }
   }
+  
+  if(status_kebakaran == "Kebakaran"){
+    telbot.sendMessage(idtel, "CEKAPURUM mendeteksi kebakaran, apakah benar prediksi CEKAPURUM?");
+    telbot.sendMessage(idtel, "Berikut Laporan yang ditangkap oleh CEKAPURUM");
+    telbot.sendMessage(idtel, "Status : " + status_kebakaran + ", Temperature :" + t + ", Humidity :" + t + ", Fire Sensor :" + f );
+    telbot.sendMessage(idtel, "Balas \"y\" apabila anda menyetujui untuk membuka katup dry chemical, Balas \"n\" apabila anda menganggap hanya false alarm" );
+    if(telbot.getNewMessage(msg)){
+      delay(10000);
+      String pesan = msg.text;
+      if(pesan="n"){
+        telbot.sendMessage(idtel, "Katup tetap tertutup, Terima kasih atas Feedbacknya!" );
+        } else {
+          telbot.sendMessage(idtel, "Membuka katup!" );
+          cekservo.write(90);
+          telbot.sendMessage(idtel, "Katup terbuka" );
+          delay(1000);
+          }
+          }
+          }
+          
 
   if (buttonState==1){
     lcd.clear();                                      //menghapus tulisan pada LCD
