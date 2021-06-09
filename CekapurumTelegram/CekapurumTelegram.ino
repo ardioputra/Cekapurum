@@ -33,7 +33,7 @@ void setup() {
   Serial.begin(115200);                               //membuka komunikasi serial dengan baudrate(kecepatan transfer data dalam bps) 115200
   telbot.wifiConnect(WIFISSID, PASSWORD);
   telbot.setTelegramToken(token);
-  Serial.print("Wifi terkoneksi");
+  Serial.println("Wifi terkoneksi");
   if(telbot.testConnection()){
     Serial.println("Koneksi Berhasil");
   } else {
@@ -69,6 +69,8 @@ void loop() {
     Serial.print("Kelembaban: ");
     Serial.print(h);
     Serial.print(" %\n");
+    Serial.print("Status: ");
+    Serial.print(status_kebakaran);
     delay(250);
   }
   
@@ -103,26 +105,6 @@ void loop() {
 
   if(telbot.getNewMessage(msg)){
     String pesan = msg.text;
-    if(pesan=="Reset" || pesan=="reset"){
-          lcd.clear();                                      //menghapus tulisan pada LCD
-          t = 0;
-          h = 0;
-          f = 0;
-          status_kebakaran = "Resetting";
-          cekservo.write(0);                                //mengatur posisi servo ke 0 derajat
-          digitalWrite(buzzer, LOW);                        //memberi nilai LOW pada pin buzzer
-          digitalWrite(led_hijau, LOW);                     //memberi nilai LOW pada led_hijau
-          digitalWrite(led_merah, LOW);                     //memberi nilai LOW pada led_merah
-          lcd.setCursor(0,0);                               //mengatur tulisan pada kolom 0 dan baris 0
-          lcd.print("Sistem");                              //menampilkan tulisan "Sistem" pada LCD
-          lcd.setCursor(0,1);                               //mengatur tulisan pada kolom 0 dan baris 1
-          lcd.print("Direset!!");                           //menampilkan tulisan "Direset!!" pada LCD
-          delay(20000);                                     //mengatur waktu jeda selama 20 s
-    }
-    if(pesan=="stat"){
-      telbot.sendMessage(idtel, "Laporan yang ditangkap oleh CEKAPURUM saat ini");
-      telbot.sendMessage(idtel, "Status : " + status_kebakaran + ", Temperature :" + t + ", Humidity :" + t + ", Fire Sensor :" + f ); 
-    }
     if(status_kebakaran == "Kebakaran"){
       telbot.sendMessage(idtel, "CEKAPURUM mendeteksi kebakaran, apakah benar prediksi CEKAPURUM?");
       telbot.sendMessage(idtel, "Berikut Laporan yang ditangkap oleh CEKAPURUM");
@@ -133,10 +115,30 @@ void loop() {
         cekservo.write(90);
         telbot.sendMessage(idtel, "Katup terbuka" );
         delay(1000);
-        cekservo.write(0);
       } else if (pesan="n"){
         telbot.sendMessage(idtel, "Katup tetap tertutup, Terima kasih atas Feedbacknya!" );
       }
+    }
+    if(pesan=="reset"){
+      telbot.sendMessage(idtel, "Sistem Direset!, Silahkan Cek CEKAPURUM");
+      lcd.clear();                                      //menghapus tulisan pada LCD
+      t = 0;
+      h = 0;
+      f = 0;
+      status_kebakaran = "Resetting";
+      cekservo.write(0);                                //mengatur posisi servo ke 0 derajat
+      digitalWrite(buzzer, LOW);                        //memberi nilai LOW pada pin buzzer
+      digitalWrite(led_hijau, LOW);                     //memberi nilai LOW pada led_hijau
+      digitalWrite(led_merah, LOW);                     //memberi nilai LOW pada led_merah
+      lcd.setCursor(0,0);                               //mengatur tulisan pada kolom 0 dan baris 0
+      lcd.print("Sistem");                              //menampilkan tulisan "Sistem" pada LCD
+      lcd.setCursor(0,1);                               //mengatur tulisan pada kolom 0 dan baris 1
+      lcd.print("Direset!!");                           //menampilkan tulisan "Direset!!" pada LCD
+      delay(20000);                                     //mengatur waktu jeda selama 20 s
+    }
+    if(pesan=="stats"){
+      telbot.sendMessage(idtel, "Laporan yang ditangkap oleh CEKAPURUM saat ini");
+      telbot.sendMessage(idtel, "Status : " + status_kebakaran + ", Temperature :" + t + ", Humidity :" + t + ", Fire Sensor :" + f ); 
     }
   }
 
