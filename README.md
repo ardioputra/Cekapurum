@@ -8,3 +8,5 @@ LCD menampilkan temperatur dan kelembapan serta saran untuk menyelamatkan diri,
 dan Servo untuk membuka katup dry chemical powder
 
 Cekapurum serta memiliki tombol reset apabila terjadi kendala
+
+![alt text](IMG_6650.jpg)
